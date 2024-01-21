@@ -1,26 +1,15 @@
-import { Box } from "@mui/material";
 import List from '@mui/material/List';
-
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import CommentIcon from '@mui/icons-material/Comment';
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TodoItem from "./TodoItem";
 import TodoForm from "./TodoForm";
-const initialTodos = [
-    {id:1, text: 'somethingfs', completed: false},
-    {id:2, text: 'somethingfdfsf', completed: true},
-    {id:3, text: 'somethingfsdfs', completed: false}
-];
+const initialTodos = () => {
+    const data = JSON.parse(localStorage.getItem('todos'));
+    if(!data) return [];
+    return data;
+}
 
 export default function TodoList() {
     const [todos, setTodos] = useState(initialTodos);
-    const [text, setText] = useState('');
 
     const removeTodo = (id) => {
         setTodos(prevTodos => {
@@ -42,10 +31,16 @@ export default function TodoList() {
 
     const addTodo = (text) => {
         setTodos(prevTodos => {
-            return [...prevTodos, {text: text, completed: false, id: 100}]
+            return [...prevTodos, {text: text, completed: false, id: crypto.randomUUID()}]
         })
     }
     
+    useEffect(() => {
+        localStorage.setItem(
+            'todos',
+            JSON.stringify(todos)
+        );
+    }, [todos])
     return (
         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {todos.map((todo) => {
