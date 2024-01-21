@@ -11,6 +11,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 
 import { useState } from "react";
 import TodoItem from "./TodoItem";
+import TodoForm from "./TodoForm";
 const initialTodos = [
     {id:1, text: 'somethingfs', completed: false},
     {id:2, text: 'somethingfdfsf', completed: true},
@@ -19,6 +20,7 @@ const initialTodos = [
 
 export default function TodoList() {
     const [todos, setTodos] = useState(initialTodos);
+    const [text, setText] = useState('');
 
     const removeTodo = (id) => {
         setTodos(prevTodos => {
@@ -37,6 +39,13 @@ export default function TodoList() {
             })
         })
     }
+
+    const addTodo = (text) => {
+        setTodos(prevTodos => {
+            return [...prevTodos, {text: text, completed: false, id: 100}]
+        })
+    }
+    
     return (
         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {todos.map((todo) => {
@@ -45,6 +54,7 @@ export default function TodoList() {
                 return toggleTodo(todo.id)
              }}/>
         })}
+        <TodoForm addTodo={addTodo}/>
       </List>
     )
 }
